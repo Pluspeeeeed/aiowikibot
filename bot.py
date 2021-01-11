@@ -9,6 +9,18 @@ class Bot:
         self.password = password
         self.api_url = api_url
         self.client = httpx.AsyncClient()
+        
+    async def close(self):
+        await self.client.aclose()
+    
+    async def ask(self, ask_args):
+        client = self.client
+        
+        post_data = {'format': 'json', 'action': 'ask', 'query': ask_args, 'api_version': '3'}
+        
+        r = await client.post(self.api_url, data=post_data)
+        
+        return r.json()["query"]
     
     async def write_wiki(self, title, text, summary, **others):
         client = self.client
@@ -19,6 +31,7 @@ class Bot:
             post_data[k] = others[k]
             
         r = await client.post(self.api_url, data=post_data)
+        
         print(r.text)
         
     async def read_wiki(self, title):
