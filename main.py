@@ -12,6 +12,7 @@ async def main():
     for i in range(100):
         tasks.append(bot.write_wiki(title, text, desc))
     results = await asyncio.gather(*tasks)
+    await bot.close()
     #print(results)
     #for result in results:
         #print(result)
