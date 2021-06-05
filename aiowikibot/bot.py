@@ -44,7 +44,19 @@ class Bot:
             ret = ret[k]
             break
         
-        return ret["revisions"][0]["*"] 
+        return ret["revisions"][0]["*"]
+
+    async def read_parsed(self, title):
+        """Get mw-parser-output"""
+        client = self.client
+
+        res = await client.post(self.api_url, data={'format': 'json', 'action': 'parse', 'assert': 'user',
+                                                    'page': title})
+        ret = res.json()['parse']['text']
+        for k in ret:
+            ret = ret[k]
+            break
+        return ret
         
     async def fetch_token(self):
         client = self.client
