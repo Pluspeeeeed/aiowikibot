@@ -57,7 +57,24 @@ class Bot:
             ret = ret[k]
             break
         return ret
-        
+
+    async def query_all_images(self, prefix):
+        client = self.client
+
+        res = await client.post(self.api_url, data={'format': 'json', 'action': 'query', 'assert': 'user',
+                                                    'list': 'allimages', 'formatversion': '2',
+                                                    'aisort': 'name', 'aiprop': '', 'aiprefix': prefix,
+                                                    'ailimit': 'max'})
+        ret = res.json()['query']['allimages']
+        print(len(ret))
+        try:
+            aicontinue = res.json()['continue']
+        except KeyError:
+            pass
+        else:
+            print('aicontinue:' + aicontinue['aicontinue'])
+        return ret
+
     async def fetch_token(self):
         client = self.client
         
